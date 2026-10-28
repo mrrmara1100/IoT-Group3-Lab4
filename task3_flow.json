@@ -1,0 +1,176 @@
+[
+  {
+    "id": "t3_tab",
+    "type": "tab",
+    "label": "Lab4 Task3 - Fever",
+    "disabled": false
+  },
+  {
+    "id": "t3_broker",
+    "type": "mqtt-broker",
+    "name": "broker.hivemq.com",
+    "broker": "broker.hivemq.com",
+    "port": "1883",
+    "clientid": "",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true
+  },
+  {
+    "id": "t3_mqtt_in",
+    "type": "mqtt in",
+    "z": "t3_tab",
+    "name": "Body temp data",
+    "topic": "lab4/task3/data",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "t3_broker",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 130,
+    "y": 120,
+    "wires": [
+      [
+        "t3_debug",
+        "t3_split"
+      ]
+    ]
+  },
+  {
+    "id": "t3_debug",
+    "type": "debug",
+    "z": "t3_tab",
+    "name": "Fever packet",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 400,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "t3_split",
+    "type": "function",
+    "z": "t3_tab",
+    "name": "Split temp / fever",
+    "func": "const d = msg.payload;\nconst fever = d.fever_flag === 1;\nreturn [\n    { topic: \"body_temp\", payload: d.body_temp },\n    { topic: \"fever_flag\", payload: fever ? \"FEVER (fever_flag = 1)\" : \"Normal (fever_flag = 0)\",\n      color: fever ? \"#c62828\" : \"#2e7d32\" }\n];",
+    "outputs": 2,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 380,
+    "y": 160,
+    "wires": [
+      [
+        "t3_gauge",
+        "t3_chart"
+      ],
+      [
+        "t3_fever"
+      ]
+    ]
+  },
+  {
+    "id": "t3_ui_tab",
+    "type": "ui_tab",
+    "name": "Lab4 Task3",
+    "icon": "dashboard",
+    "order": 1,
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "t3_ui_group",
+    "type": "ui_group",
+    "name": "Fever Detection (MLX90614)",
+    "tab": "t3_ui_tab",
+    "order": 1,
+    "disp": true,
+    "width": "6",
+    "collapse": false
+  },
+  {
+    "id": "t3_gauge",
+    "type": "ui_gauge",
+    "z": "t3_tab",
+    "name": "Body temperature",
+    "group": "t3_ui_group",
+    "order": 2,
+    "width": 0,
+    "height": 0,
+    "gtype": "gage",
+    "title": "Body temperature",
+    "label": "°C",
+    "format": "{{value | number:1}}",
+    "min": 20,
+    "max": 45,
+    "colors": [
+      "#00b500",
+      "#ca3838",
+      "#8b0000"
+    ],
+    "seg1": "32.5",
+    "seg2": "38",
+    "x": 640,
+    "y": 120,
+    "wires": []
+  },
+  {
+    "id": "t3_fever",
+    "type": "ui_text",
+    "z": "t3_tab",
+    "group": "t3_ui_group",
+    "order": 1,
+    "width": 0,
+    "height": 0,
+    "name": "Status",
+    "label": "Status",
+    "format": "<b style=\"color:{{msg.color}};font-size:1.6em\">{{msg.payload}}</b>",
+    "layout": "row-spread",
+    "x": 640,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "t3_chart",
+    "type": "ui_chart",
+    "z": "t3_tab",
+    "name": "Body temp over time",
+    "group": "t3_ui_group",
+    "order": 3,
+    "width": 0,
+    "height": 0,
+    "label": "Body temp over time",
+    "chartType": "line",
+    "legend": "false",
+    "xformat": "HH:mm:ss",
+    "interpolate": "linear",
+    "nodata": "Waiting for data...",
+    "dot": false,
+    "ymin": "20",
+    "ymax": "45",
+    "removeOlder": "5",
+    "removeOlderPoints": "",
+    "removeOlderUnit": "60",
+    "cutout": 0,
+    "useOneColor": false,
+    "useUTC": false,
+    "colors": [
+      "#1f77b4"
+    ],
+    "outputs": 1,
+    "useDifferentColor": false,
+    "x": 640,
+    "y": 160,
+    "wires": [
+      []
+    ]
+  }
+]

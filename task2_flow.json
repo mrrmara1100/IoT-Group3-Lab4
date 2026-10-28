@@ -1,0 +1,176 @@
+[
+  {
+    "id": "t2_tab",
+    "type": "tab",
+    "label": "Lab4 Task2 - Gas Risk",
+    "disabled": false
+  },
+  {
+    "id": "t2_broker",
+    "type": "mqtt-broker",
+    "name": "broker.hivemq.com",
+    "broker": "broker.hivemq.com",
+    "port": "1883",
+    "clientid": "",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true
+  },
+  {
+    "id": "t2_mqtt_in",
+    "type": "mqtt in",
+    "z": "t2_tab",
+    "name": "Gas data",
+    "topic": "lab4/task2/data",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "t2_broker",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 130,
+    "y": 120,
+    "wires": [
+      [
+        "t2_debug",
+        "t2_split"
+      ]
+    ]
+  },
+  {
+    "id": "t2_debug",
+    "type": "debug",
+    "z": "t2_tab",
+    "name": "Gas packet",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 400,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "t2_split",
+    "type": "function",
+    "z": "t2_tab",
+    "name": "Split gas_avg / risk",
+    "func": "const d = msg.payload;\nconst colors = { SAFE: \"#2e7d32\", WARNING: \"#f9a825\", DANGER: \"#c62828\" };\nreturn [\n    { topic: \"gas_avg\", payload: d.gas_avg },\n    { topic: \"risk_level\", payload: d.risk_level, color: colors[d.risk_level] || \"#777\" }\n];",
+    "outputs": 2,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 380,
+    "y": 160,
+    "wires": [
+      [
+        "t2_gauge",
+        "t2_chart"
+      ],
+      [
+        "t2_risk"
+      ]
+    ]
+  },
+  {
+    "id": "t2_ui_tab",
+    "type": "ui_tab",
+    "name": "Lab4 Task2",
+    "icon": "dashboard",
+    "order": 1,
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "t2_ui_group",
+    "type": "ui_group",
+    "name": "Gas Risk (MQ-5)",
+    "tab": "t2_ui_tab",
+    "order": 1,
+    "disp": true,
+    "width": "6",
+    "collapse": false
+  },
+  {
+    "id": "t2_gauge",
+    "type": "ui_gauge",
+    "z": "t2_tab",
+    "name": "Gas (moving avg)",
+    "group": "t2_ui_group",
+    "order": 2,
+    "width": 0,
+    "height": 0,
+    "gtype": "gage",
+    "title": "Gas (moving avg)",
+    "label": "ADC",
+    "format": "{{value | number:1}}",
+    "min": 0,
+    "max": 4095,
+    "colors": [
+      "#00b500",
+      "#e6e600",
+      "#ca3838"
+    ],
+    "seg1": "2100",
+    "seg2": "2600",
+    "x": 640,
+    "y": 120,
+    "wires": []
+  },
+  {
+    "id": "t2_risk",
+    "type": "ui_text",
+    "z": "t2_tab",
+    "group": "t2_ui_group",
+    "order": 1,
+    "width": 0,
+    "height": 0,
+    "name": "Risk level",
+    "label": "Risk level",
+    "format": "<b style=\"color:{{msg.color}};font-size:1.6em\">{{msg.payload}}</b>",
+    "layout": "row-spread",
+    "x": 640,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "t2_chart",
+    "type": "ui_chart",
+    "z": "t2_tab",
+    "name": "Gas avg over time",
+    "group": "t2_ui_group",
+    "order": 3,
+    "width": 0,
+    "height": 0,
+    "label": "Gas avg over time",
+    "chartType": "line",
+    "legend": "false",
+    "xformat": "HH:mm:ss",
+    "interpolate": "linear",
+    "nodata": "Waiting for data...",
+    "dot": false,
+    "ymin": "0",
+    "ymax": "4095",
+    "removeOlder": "5",
+    "removeOlderPoints": "",
+    "removeOlderUnit": "60",
+    "cutout": 0,
+    "useOneColor": false,
+    "useUTC": false,
+    "colors": [
+      "#1f77b4"
+    ],
+    "outputs": 1,
+    "useDifferentColor": false,
+    "x": 640,
+    "y": 160,
+    "wires": [
+      []
+    ]
+  }
+]

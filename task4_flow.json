@@ -1,0 +1,124 @@
+[
+  {
+    "id": "t4_tab",
+    "type": "tab",
+    "label": "Lab4 Task4 - InfluxDB",
+    "disabled": false
+  },
+  {
+    "id": "t4_broker",
+    "type": "mqtt-broker",
+    "name": "broker.hivemq.com",
+    "broker": "broker.hivemq.com",
+    "port": "1883",
+    "clientid": "",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true
+  },
+  {
+    "id": "t4_mqtt_in",
+    "type": "mqtt in",
+    "z": "t4_tab",
+    "name": "Full system data",
+    "topic": "lab4/task4/data",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "t4_broker",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 130,
+    "y": 120,
+    "wires": [
+      [
+        "t4_debug",
+        "t4_fmt"
+      ]
+    ]
+  },
+  {
+    "id": "t4_debug",
+    "type": "debug",
+    "z": "t4_tab",
+    "name": "Full packet",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 400,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "t4_fmt",
+    "type": "function",
+    "z": "t4_tab",
+    "name": "Format for InfluxDB",
+    "func": "// Turn the ESP32 packet into InfluxDB fields + tags: [fields, tags]\nconst d = msg.payload;\nconst fields = {};\nfor (const k of [\"gas_raw\", \"gas_avg\", \"risk_code\", \"body_temp\", \"fever_flag\", \"pressure\", \"altitude\"]) {\n    if (typeof d[k] === \"number\") fields[k] = d[k] * 1.0;\n}\nif (d.risk_level) fields.risk_level = String(d.risk_level);\nif (d.timestamp) fields.ds3231_time = String(d.timestamp);\nmsg.payload = [fields, { device: \"esp32\" }];\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 380,
+    "y": 180,
+    "wires": [
+      [
+        "t4_influx_out",
+        "t4_debug_db"
+      ]
+    ]
+  },
+  {
+    "id": "t4_debug_db",
+    "type": "debug",
+    "z": "t4_tab",
+    "name": "Written to InfluxDB",
+    "active": false,
+    "tosidebar": true,
+    "console": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 650,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "t4_influxdb",
+    "type": "influxdb",
+    "hostname": "127.0.0.1",
+    "port": "8086",
+    "protocol": "http",
+    "database": "aupp_lab",
+    "name": "aupp_lab (local)",
+    "usetls": false,
+    "tls": "",
+    "influxdbVersion": "1.x",
+    "url": "http://localhost:8086",
+    "timeout": "10",
+    "rejectUnauthorized": true
+  },
+  {
+    "id": "t4_influx_out",
+    "type": "influxdb out",
+    "z": "t4_tab",
+    "influxdb": "t4_influxdb",
+    "name": "aupp_lab / lab4",
+    "measurement": "lab4",
+    "precision": "",
+    "retentionPolicy": "",
+    "database": "database",
+    "precisionV18FluxV20": "ms",
+    "retentionPolicyV18Flux": "",
+    "org": "organisation",
+    "bucket": "bucket",
+    "x": 650,
+    "y": 180,
+    "wires": []
+  }
+]
