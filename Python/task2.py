@@ -16,13 +16,13 @@ MQ5_PIN     = 34
 WINDOW_SIZE = 5    
 
 # Classification thresholds (applied to the averaged value)
-WARNING_LEVEL = 2100   # 2100 - 2599 -> WARNING
-DANGER_LEVEL  = 2600   # >= 2600     -> DANGER
+WARNING_LEVEL = 2100   
+DANGER_LEVEL  = 2600   
 
 # ---------- ADC setup ----------
 adc = ADC(Pin(MQ5_PIN))
-adc.atten(ADC.ATTN_11DB)     # full 0 - 3.3V range
-adc.width(ADC.WIDTH_12BIT)   # 0 - 4095
+adc.atten(ADC.ATTN_11DB)     
+adc.width(ADC.WIDTH_12BIT)   
 
 # ---------- Moving average buffer ----------
 readings = [0] * WINDOW_SIZE
@@ -52,7 +52,7 @@ def classify_gas(value):
 
 def connect_wifi():
     wlan = network.WLAN(network.STA_IF)
-    wlan.active(False)   # reset the radio (clears a stuck connection left by the previous run)
+    wlan.active(False)   #
     time.sleep(0.5)
     wlan.active(True)
     while True:

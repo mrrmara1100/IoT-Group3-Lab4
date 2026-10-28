@@ -78,18 +78,18 @@ class DS3231:
 
 # ---------- Hardware setup ----------
 adc = ADC(Pin(MQ5_PIN))
-adc.atten(ADC.ATTN_11DB)     # full 0 - 3.3V range
-adc.width(ADC.WIDTH_12BIT)   # 0 - 4095
+adc.atten(ADC.ATTN_11DB)     
+adc.width(ADC.WIDTH_12BIT)   
 
 i2c_mlx = I2C(0, scl=Pin(MLX_SCL), sda=Pin(MLX_SDA), freq=100000)
 i2c_bmp = I2C(1, scl=Pin(BMP_SCL), sda=Pin(BMP_SDA), freq=100000)
-# Internal pull-ups in case the DS3231 board has none (SoftI2C needs them)
+
 i2c_rtc = SoftI2C(scl=Pin(RTC_SCL, Pin.OPEN_DRAIN, Pin.PULL_UP),
                   sda=Pin(RTC_SDA, Pin.OPEN_DRAIN, Pin.PULL_UP), freq=100000)
 
-print("MLX90614 bus:", [hex(a) for a in i2c_mlx.scan()])   # expect 0x5a
-print("BMP280 bus:  ", [hex(a) for a in i2c_bmp.scan()])   # expect 0x76 or 0x77
-print("DS3231 bus:  ", [hex(a) for a in i2c_rtc.scan()])   # expect 0x68 (0x57 = on-board EEPROM)
+print("MLX90614 bus:", [hex(a) for a in i2c_mlx.scan()])   
+print("BMP280 bus:  ", [hex(a) for a in i2c_bmp.scan()])   
+print("DS3231 bus:  ", [hex(a) for a in i2c_rtc.scan()])   
 if DS3231.ADDR not in i2c_rtc.scan():
     print("WARNING: DS3231 not found on SDA {} / SCL {} - check its wiring".format(RTC_SDA, RTC_SCL))
 
@@ -134,7 +134,7 @@ def altitude_from_pressure(hpa):
 def sync_rtc_from_ntp():
     import ntptime
     try:
-        ntptime.settime()   # sets the ESP32 clock to UTC
+        ntptime.settime()   
         t = time.localtime(time.time() + UTC_OFFSET_HOURS * 3600)
         rtc.set_datetime(t[0], t[1], t[2], t[3], t[4], t[5], t[6] + 1)
         print("DS3231 set from NTP:", rtc.timestamp())
@@ -144,7 +144,7 @@ def sync_rtc_from_ntp():
 
 def connect_wifi():
     wlan = network.WLAN(network.STA_IF)
-    wlan.active(False)   # reset the radio (clears a stuck connection left by the previous run)
+    wlan.active(False)   
     time.sleep(0.5)
     wlan.active(True)
     while True:
