@@ -201,7 +201,7 @@ In Node-RED, a function node splits the packet: the average goes to a gauge (gre
 | ![Task 2 – screenshot 1](Evidence/lab4_task2_node_red.png) | ![Task 2 – screenshot 2](Evidence/lab4_task2_thonny.png) |
 | _Risk state: SAFE_ | _Risk state: WARNING / DANGER_ |
 
-**We coudn't test the warning/danger sign. This naming is purely for aesthetic**
+| _We coudn't test the warning/danger sign. This naming is purely for aesthetic_|
 ---
 
 ## Task 3 – Fever Detection Logic
@@ -254,7 +254,7 @@ Node-RED shows the temperature on a gauge and chart, and the flag as a status la
 | ![Task 3 – screenshot 1](Evidence/lab4_task3_thonny.png) | ![Task 3 – screenshot 2](Evidence/lab4_task3_node_red.png) |
 | _Normal: fever_flag = 0_ | _Fever detected: fever_flag = 1_ |
 
-**both 1 and 0 are included in each screencshot. The naming is for aesthetic reason**
+| _both 1 and 0 are included in each screencshot. The naming is for aesthetic reason_|
 ---
 
 ## Task 4 – Pressure & Altitude Monitoring (Grafana)
