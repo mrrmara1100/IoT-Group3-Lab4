@@ -387,3 +387,5 @@ A reading therefore appears on the Grafana dashboard within about 5 seconds of t
 |---|---|
 | ![Task 4 – screenshot 1](Evidence/lab4_task4_1.png) | ![Task 4 – screenshot 2](Evidence/lab4_task4_2.png) |
 | _Complete Grafana dashboard_ |
+
+**Video:** [Watch on YouTube](https://youtu.be/6zgXtoudTng)

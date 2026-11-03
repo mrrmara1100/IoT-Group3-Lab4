@@ -1,0 +1,8 @@
+{
+    "python.analysis.extraPaths": [
+        ".vscode/stubs"
+    ],
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingModuleSource": "none"
+    }
+}
